@@ -13,10 +13,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
       - name: Configure CMake
         shell: pwsh
         run: |
-          cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         shell: pwsh
@@ -28,7 +31,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force -Path output
           Get-ChildItem -Recurse build
-          Copy-Item build\Release\opencpn_keepmark_plugin.dll output\opencpn_keepmark_plugin.dll
+          Copy-Item build\opencpn_keepmark_plugin.dll output\opencpn_keepmark_plugin.dll
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
